@@ -1,0 +1,18 @@
+[Unit]
+Description=Crow Friend service
+After=multi-user.target
+
+[Service]
+User=pi
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/crow_friend/crow.py
+
+[Install]
+WantedBy=multi-user.target
+
+# copy or link service
+# ln -s /<FULL PATH TO >/weather_station/sdr_weather_reading.service /etc/systemd/system/sdr_weather_reading.service
+
+# sudo chmod 644 /etc/systemd/system/<name>.service
+# sudo systemctl daemon-reload
+# sudo systemctl enable <name>.service
