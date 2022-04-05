@@ -1,42 +1,35 @@
 # Enable headphone audio out via raspi-config
 
-import threading
-
 # An alternate way of determining the correct mouth movements could be a volume sensor; ie if it's not possible to determine loudness _before_ a sound is made.
+from logger import logger
 
-# woow_x - 1.7913730144500732
+from pygame import mixer
+
+# volume range from 0 to 1
+mixer.init()
+mixer.music.set_volume(1)
+
+# play sound
+def play(filename):
+    logger.info(f"play {filename}")
+    full_path = SOUND_FILE_ROOT + filename
+    mixer.music.load(full_path)
+    logger.info(f"mixer {mixer.music}")
+    mixer.music.play()
+
+
 SOUND_FILE_ROOT = '/home/pi/crow_friend/sounds/'
 
+# woow_x - 1.7913730144500732
 WOOW_X = 'woow_x.wav'
-CROW_4 = 'crow_4.wav'
-SURPRISE = 'surprise.mp3'
 
+CROW_4 = 'crow_4.wav'
+# surprise motherfucker!
+SURPRISE = 'surprise.mp3'
+SURPRISE_L = 'surprise_louder.mp3'
+# 1 Caw, 700ms
+CAW_1  = 'crow_1_loud.mp3'
+# 4 caws, 3s
+CAW_4 = 'crow_4.wav'
 # 1 Caw, 700ms
 CROW_1  = 'crow_1.mp3'
-
-# ****
-
-
-# https://stackoverflow.com/questions/5179467/equivalent-of-setinterval-in-python
-def set_interval(interval, times = -1):
-    # This will be the actual decorator,
-    # with fixed interval and times parameter
-    def outer_wrap(function):
-        # This will be the function to be
-        # called
-        def wrap(*args, **kwargs):
-            stop = threading.Event()
-            # This is another function to be executed
-            # in a different thread to simulate set_interval
-            def inner_wrap():
-                i = 0
-                while i != times and not stop.isSet():
-                    stop.wait(interval)
-                    function(*args, **kwargs)
-                    i += 1
-            t = threading.Timer(0, inner_wrap)
-            t.daemon = True
-            t.start()
-            return stop
-        return wrap
-    return outer_wrap
